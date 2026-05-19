@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>涉水审批材料合规性审查系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航 */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+        
+        .navbar-brand {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand span {
+            margin-left: 10px;
+        }
+        
+        .navbar-nav {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        .navbar-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .navbar-nav a:hover,
+        .navbar-nav a.active {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* 主容器 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 页面内容 */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        /* 按钮 */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* 表格 */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        /* 状态标签 */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .status-reviewing {
+            background: #3498db;
+            color: white;
+        }
+        
+        .status-approved {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .status-rejected {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* 表单 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* 文件上传 */
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #e8ecff;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .file-item .file-name {
+            flex: 1;
+            margin-left: 10px;
+        }
+        
+        .file-item .file-size {
+            color: #999;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .file-item .file-remove {
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        /* 网格布局 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-card h3 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 结果页面 */
+        .result-section {
+            padding: 20px;
+        }
+        
+        .result-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-item.error {
+            border-left-color: #e74c3c;
+            background: #fdf2f2;
+        }
+        
+        .result-item.warning {
+            border-left-color: #f39c12;
+            background: #fef9e7;
+        }
+        
+        .result-item.success {
+            border-left-color: #27ae60;
+            background: #f0f9f4;
+        }
+        
+        /* 操作按钮组 */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        /* 数据库状态指示器 */
+        .db-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 12px;
+            z-index: 999;
+        }
+        
+        .db-status.connected {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .db-status.disconnected {
+            border-left: 4px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                🌊 <span>涉水审批审查系统</span>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="#" class="nav-link active" data-page="list">申请列表</a></li>
+                <li><a href="#" class="nav-link" data-page="new">新建申请</a></li>
+                <li><a href="#" class="nav-link" data-page="review">审查结果</a></li>
+                <li><a href="#" class="nav-link" data-page="database">数据库</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 申请列表页面 -->
+        <div id="page-list" class="page active">
+            <!-- 统计卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="stat-total">0</h3>
+                    <p>总申请数</p>
+                </div>
+                <div class="stat-card" style="border-left-color: #f39c12;">
+                    <h3 id="stat-pending">0</h3>
+                    <p>待审查</p>
+                </div>
+                <div class="stat-card" style="border-left-color: #3498db;">
+                    <h3 id="stat-reviewing">0</h3>
+                    <p>审查中</p>
+                </div>
+                <div class="stat-card" style="border-left-color: #27ae60;">
+                    <h3 id="stat-approved">0</h3>
+                    <p>已通过</p>
+                </div>
+            </div>
+            
+            <!-- 申请列表 -->
+            <div class="card">
+                <div class="card-header">
+                    申请列表
+                    <button class="btn btn-primary" style="float: right;" onclick="navigateTo('new')">
+                        + 新建申请
+                    </button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>申请编号</th>
+                            <th>项目名称</th>
+                            <th>申请人</th>
+                            <th>取水水源</th>
+                            <th>申请日期</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applications-list">
+                        <!-- 动态加载 -->
+                    </tbody>
+                </table>
+                <div id="empty-list" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📋</div>
+                    <p>暂无申请记录</p>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="navigateTo('new')">
+                        创建第一个申请
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 新建申请页面 -->
+        <div id="page-new" class="page">
+            <div class="card">
+                <div class="card-header">新建申请</div>
+                <form id="application-form">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="projectName">项目名称 *</label>
+                            <input type="text" id="projectName" required placeholder="请输入项目名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="applicantName">申请人/单位 *</label>
+                            <input type="text" id="applicantName" required placeholder="请输入申请人姓名或单位名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="waterSource">取水水源 *</label>
+                            <input type="text" id="waterSource" required placeholder="请输入水源名称">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="waterPurpose">取水用途 *</label>
+                            <select id="waterPurpose" required>
+                                <option value="">请选择</option>
+                                <option value="工业用水">工业用水</option>
+                                <option value="农业灌溉">农业灌溉</option>
+                                <option value="生活用水">生活用水</option>
+                                <option value="生态用水">生态用水</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="applicationPeriod">申请期限 *</label>
+                            <input type="text" id="applicationPeriod" required placeholder="例如：2024-01-01 至 2029-12-31">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="waterVolume">年取水量（立方米）*</label>
+                            <input type="number" id="waterVolume" required placeholder="请输入年取水量">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>项目简介</label>
+                        <textarea id="projectDescription" rows="4" placeholder="请简要描述项目情况"></textarea>
+                    </div>
+                    
+                    <!-- 附件上传 -->
+                    <div class="form-group">
+                        <label>上传附件 *</label>
+                        <div class="upload-area" id="upload-area">
+                            <div class="upload-icon">📁</div>
+                            <p>点击或拖拽文件到此处上传</p>
+                            <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                                支持格式：PDF, DOC, DOCX, JPG, PNG | 单个文件不超过 10MB
+                            </p>
+                            <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                        </div>
+                        <div class="file-list" id="file-list"></div>
+                    </div>
+                    
+                    <!-- 文档清单选择 -->
+                    <div class="form-group">
+                        <label>文档类型清单</label>
+                        <div class="grid-3">
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="application_form"> 申请表
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="business_license"> 营业执照
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="id_card"> 身份证复印件
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="water_resource_report"> 水资源论证报告
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="commitment_letter"> 承诺书
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" value="land_proof"> 土地权属证明
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn" onclick="navigateTo('list')">取消</button>
+                        <button type="submit" class="btn btn-primary">提交申请</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 审查结果页面 -->
+        <div id="page-review" class="page">
+            <div class="card">
+                <div class="card-header">
+                    审查结果
+                    <button class="btn btn-info" style="float: right;" onclick="navigateTo('list')">
+                        返回列表
+                    </button>
+                </div>
+                <div id="review-content">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>请选择一个申请查看审查结果</p>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="navigateTo('list')">
+                            返回申请列表
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据库管理页面 -->
+        <div id="page-database" class="page">
+            <div class="card">
+                <div class="card-header">
+                    数据库管理
+                    <span id="db-connection-status" style="float: right; font-size: 12px; color: #999;">
+                        检测中...
+                    </span>
+                </div>
+                <div style="padding: 20px; background: #f8f9fa; border-radius: 5px; margin-bottom: 20px;">
+                    <h4 style="margin-bottom: 10px;">📊 数据库信息</h4>
+                    <p><strong>数据库类型：</strong>H2 Database (内存数据库)</p>
+                    <p><strong>访问地址：</strong><a href="http://localhost:8080/h2-console" target="_blank">http://localhost:8080/h2-console</a></p>
+                    <p><strong>JDBC URL：</strong>jdbc:h2:mem:waterdb</p>
+                    <p><strong>用户名：</strong>sa</p>
+                    <p><strong>密码：</strong>(空)</p>
+                    <p style="margin-top: 10px; color: #666; font-size: 14px;">
+                        💡 提示：点击上面的链接可以打开 H2 控制台查看数据库表和数据
+                    </p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="db-stat-total">0</h3>
+                        <p>总记录数</p>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #f39c12;">
+                        <h3 id="db-stat-pending">0</h3>
+                        <p>待审查</p>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #3498db;">
+                        <h3 id="db-stat-reviewing">0</h3>
+                        <p>审查中</p>
+                    </div>
+                    <div class="stat-card" style="border-left-color: #27ae60;">
+                        <h3 id="db-stat-approved">0</h3>
+                        <p>已通过</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="refreshStatistics()">刷新统计</button>
+                    <button class="btn btn-info" onclick="window.open('http://localhost:8080/h2-console', '_blank')">打开 H2 控制台</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 审查进度模态框 -->
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>智能审查中...</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 40px;">
+                <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #667eea; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                <p>AI 正在对申请材料进行智能审查</p>
+                <p style="color: #999; font-size: 14px; margin-top: 10px;">请稍候，这可能需要几分钟...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 数据库状态指示器 -->
+    <div id="db-status" class="db-status disconnected">
+        🗄️ 数据库：<span id="db-status-text">未连接</span>
+    </div>
+    
+    <script>
+        // API 基础地址
+        const API_BASE = 'http://localhost:8080/api';
+        let uploadedFiles = [];
+        
+        // 页面导航
+        function navigateTo(page) {
+            // 更新导航菜单
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === page) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // 切换页面
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById('page-' + page).classList.add('active');
+            
+            // 加载数据
+            if (page === 'list') {
+                loadApplicationsList();
+            } else if (page === 'database') {
+                loadDatabaseInfo();
+            }
+        }
+        
+        // 检查数据库连接
+        async function checkDatabaseConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/applications/statistics`);
+                if (response.ok) {
+                    document.getElementById('db-status').className = 'db-status connected';
+                    document.getElementById('db-status-text').textContent = '已连接';
+                    document.getElementById('db-connection-status').textContent = '✓ 已连接';
+                    document.getElementById('db-connection-status').style.color = '#27ae60';
+                    return true;
+                }
+            } catch (error) {
+                document.getElementById('db-status').className = 'db-status disconnected';
+                document.getElementById('db-status-text').textContent = '未连接';
+                document.getElementById('db-connection-status').textContent = '✗ 未连接';
+                document.getElementById('db-connection-status').style.color = '#e74c3c';
+            }
+            return false;
+        }
+        
+        // 加载申请列表
+        async function loadApplicationsList() {
+            try {
+                const response = await fetch(`${API_BASE}/applications`);
+                if (!response.ok) {
+                    throw new Error('加载失败');
+                }
+                
+                const data = await response.json();
+                const applications = data.data || [];
+                
+                const tbody = document.getElementById('applications-list');
+                const emptyList = document.getElementById('empty-list');
+                
+                if (applications.length === 0) {
+                    tbody.innerHTML = '';
+                    emptyList.style.display = 'block';
+                } else {
+                    emptyList.style.display = 'none';
+                    tbody.innerHTML = applications.map(app => `
+                        <tr>
+                            <td>${app.applicationNumber || 'APP' + String(app.id).padStart(5, '0')}</td>
+                            <td>${app.projectName}</td>
+                            <td>${app.applicantName}</td>
+                            <td>${app.waterSource}</td>
+                            <td>${formatDate(app.submittedAt)}</td>
+                            <td><span class="status-badge status-${app.status}">${getStatusText(app.status)}</span></td>
+                            <td>
+                                <button class="btn btn-info" onclick="viewApplication(${app.id})">查看</button>
+                                <button class="btn btn-primary" onclick="reviewApplication(${app.id})">审查</button>
+                                <button class="btn btn-danger" onclick="deleteApplication(${app.id})">删除</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+                
+                // 更新统计
+                updateStats();
+                
+            } catch (error) {
+                console.error('加载申请列表失败:', error);
+                alert('加载失败，请确保 Java 后端已启动');
+            }
+        }
+        
+        // 更新统计
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_BASE}/applications/statistics`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const stats = data.data;
+                    
+                    document.getElementById('stat-total').textContent = stats.total || 0;
+                    document.getElementById('stat-pending').textContent = stats.pending || 0;
+                    document.getElementById('stat-reviewing').textContent = stats.reviewing || 0;
+                    document.getElementById('stat-approved').textContent = stats.approved || 0;
+                }
+            } catch (error) {
+                console.error('获取统计失败:', error);
+            }
+        }
+        
+        // 加载数据库信息
+        async function loadDatabaseInfo() {
+            await checkDatabaseConnection();
+            await refreshStatistics();
+        }
+        
+        // 刷新统计
+        async function refreshStatistics() {
+            try {
+                const response = await fetch(`${API_BASE}/applications/statistics`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const stats = data.data;
+                    
+                    document.getElementById('db-stat-total').textContent = stats.total || 0;
+                    document.getElementById('db-stat-pending').textContent = stats.pending || 0;
+                    document.getElementById('db-stat-reviewing').textContent = stats.reviewing || 0;
+                    document.getElementById('db-stat-approved').textContent = stats.approved || 0;
+                }
+            } catch (error) {
+                console.error('获取统计失败:', error);
+            }
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '未提交';
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN');
+        }
+        
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '待审查',
+                'reviewing': '审查中',
+                'approved': '已通过',
+                'rejected': '已拒绝'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // 查看申请
+        function viewApplication(id) {
+            alert('查看申请详情功能开发中...');
+        }
+        
+        // 审查申请
+        async function reviewApplication(id) {
+            // 显示进度模态框
+            document.getElementById('review-modal').classList.add('show');
+            
+            try {
+                // 获取申请详情
+                const appResponse = await fetch(`${API_BASE}/applications/${id}`);
+                const appData = await appResponse.json();
+                const app = appData.data;
+                
+                // 准备审查数据
+                const reviewData = {
+                    application_data: {
+                        project_name: app.projectName,
+                        applicant_name: app.applicantName,
+                        water_source: app.waterSource,
+                        water_purpose: app.waterPurpose,
+                        application_period: app.applicationPeriod,
+                        water_volume: parseInt(app.waterVolume)
+                    },
+                    documents: app.documents ? JSON.parse(app.documents) : [],
+                    check_type: 'full'
+                };
+                
+                // 通过 Java 后端调用 Python AI 服务
+                const response = await fetch(`${API_BASE}/review`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('审查服务不可用');
+                }
+                
+                const result = await response.json();
+                
+                // 保存审查结果到数据库
+                await fetch(`${API_BASE}/applications/${id}/review`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        reviewResult: JSON.stringify(result)
+                    })
+                });
+                
+                // 关闭模态框
+                document.getElementById('review-modal').classList.remove('show');
+                
+                // 显示结果
+                displayReviewResult(app, result);
+                
+                // 重新加载列表
+                loadApplicationsList();
+                
+            } catch (error) {
+                document.getElementById('review-modal').classList.remove('show');
+                alert('审查失败：' + error.message);
+            }
+        }
+        
+        // 显示审查结果
+        function displayReviewResult(app, result) {
+            navigateTo('review');
+            
+            const content = document.getElementById('review-content');
+            
+            let html = `
+                <div class="result-section">
+                    <div style="margin-bottom: 20px;">
+                        <h3>${app.projectName}</h3>
+                        <p style="color: #666;">申请人：${app.applicantName} | 审查时间：${new Date().toLocaleString('zh-CN')}</p>
+                    </div>
+            `;
+            
+            // 审查概览
+            if (result.results) {
+                html += `
+                    <div class="result-item">
+                        <strong>审查类型：</strong>${result.results.check_type || '全面审查'}<br>
+                        <strong>发现问题数：</strong>${result.results.total_issues || 0}<br>
+                        <strong>严重问题：</strong>${result.results.critical_issues || 0}<br>
+                        <strong>警告问题：</strong>${result.results.warning_issues || 0}
+                    </div>
+                `;
+            }
+            
+            // 详细问题
+            if (result.issues && result.issues.length > 0) {
+                html += '<h4 style="margin: 20px 0 10px;">发现问题：</h4>';
+                result.issues.forEach((issue, i) => {
+                    const severityClass = issue.severity === 'high' ? 'error' : 
+                                         issue.severity === 'medium' ? 'warning' : 'success';
+                    html += `
+                        <div class="result-item ${severityClass}">
+                            <strong>问题${i + 1}：</strong>${issue.message}<br>
+                            <small>类型：${issue.type} | 文档：${issue.document || '无'}</small>
+                        </div>
+                    `;
+                });
+            }
+            
+            // 建议
+            if (result.recommendations && result.recommendations.length > 0) {
+                html += '<h4 style="margin: 20px 0 10px;">改进建议：</h4>';
+                result.recommendations.forEach((rec, i) => {
+                    html += `
+                        <div class="result-item warning">
+                            💡 ${rec}
+                        </div>
+                    `;
+                });
+            }
+            
+            // 总体评价
+            if (result.overall_assessment) {
+                html += `
+                    <div class="result-item success" style="margin-top: 20px;">
+                        <strong>总体评价：</strong>${result.overall_assessment}
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+        
+        // 删除申请
+        async function deleteApplication(id) {
+            if (confirm('确定要删除这个申请吗？')) {
+                try {
+                    await fetch(`${API_BASE}/applications/${id}`, {
+                        method: 'DELETE'
+                    });
+                    alert('删除成功');
+                    loadApplicationsList();
+                } catch (error) {
+                    alert('删除失败：' + error.message);
+                }
+            }
+        }
+        
+        // 文件上传处理
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileList = document.getElementById('file-list');
+        let uploadedFileIds = []; // 存储已上传文件的 ID
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+        
+        async function handleFiles(files) {
+            for (let file of Array.from(files)) {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`文件 ${file.name} 超过 10MB，无法上传`);
+                    continue;
+                }
+                
+                // 显示上传中状态
+                const uploadIndex = uploadedFiles.length;
+                uploadedFiles.push({
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    file: file,
+                    uploading: true,
+                    id: null
+                });
+                
+                renderFileList();
+                
+                // 上传文件到服务器
+                try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    const response = await fetch(`${API_BASE}/files/upload`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || '上传失败');
+                    }
+                    
+                    const result = await response.json();
+                    const fileInfo = result.data;
+                    
+                    // 更新文件信息
+                    uploadedFiles[uploadIndex].uploading = false;
+                    uploadedFiles[uploadIndex].id = fileInfo.id;
+                    uploadedFiles[uploadIndex].downloadUrl = fileInfo.downloadUrl;
+                    uploadedFileIds.push(fileInfo.id);
+                    
+                    renderFileList();
+                    
+                } catch (error) {
+                    alert(`文件 ${file.name} 上传失败：${error.message}`);
+                    uploadedFiles.splice(uploadIndex, 1);
+                    renderFileList();
+                }
+            }
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        
+        function renderFileList() {
+            fileList.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <span>📄</span>
+                    <span class="file-name">${file.uploading ? '⏳ 上传中...' : file.name}</span>
+                    <span class="file-size">${file.size}</span>
+                    ${file.uploading ? '' : `<a href="${file.downloadUrl || '#'}" target="_blank" style="margin-left: 10px; color: #3498db;">📥 下载</a>`}
+                    <span class="file-remove" onclick="removeFile(${index})">删除</span>
+                </div>
+            `).join('');
+        }
+        
+        function removeFile(index) {
+            const file = uploadedFiles[index];
+            // 如果文件已上传到服务器，调用删除接口
+            if (file.id && !file.uploading) {
+                fetch(`${API_BASE}/files/${file.id}`, {
+                    method: 'DELETE'
+                }).then(() => {
+                    uploadedFileIds = uploadedFileIds.filter(id => id !== file.id);
+                }).catch(err => console.error('删除服务器文件失败:', err));
+            }
+            uploadedFiles.splice(index, 1);
+            renderFileList();
+        }
+        
+        // 表单提交
+        document.getElementById('application-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newApplication = {
+                projectName: document.getElementById('projectName').value,
+                applicantName: document.getElementById('applicantName').value,
+                waterSource: document.getElementById('waterSource').value,
+                waterPurpose: document.getElementById('waterPurpose').value,
+                applicationPeriod: document.getElementById('applicationPeriod').value,
+                waterVolume: parseInt(document.getElementById('waterVolume').value),
+                projectDescription: document.getElementById('projectDescription').value,
+                documents: JSON.stringify(Array.from(document.querySelectorAll('.checkbox-item input:checked')).map(cb => cb.value)),
+                files: JSON.stringify(uploadedFiles.filter(f => f.id).map(f => ({
+                    id: f.id,
+                    name: f.name,
+                    downloadUrl: f.downloadUrl
+                }))),
+                status: 'pending'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/applications`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newApplication)
+                });
+                
+                if (response.ok) {
+                    alert('申请提交成功！');
+                    navigateTo('list');
+                    
+                    // 重置表单
+                    document.getElementById('application-form').reset();
+                    uploadedFiles = [];
+                    uploadedFileIds = [];
+                    renderFileList();
+                    
+                    // 重新加载列表
+                    loadApplicationsList();
+                } else {
+                    alert('提交失败：' + response.statusText);
+                }
+            } catch (error) {
+                alert('提交失败：' + error.message);
+            }
+        });
+        
+        // 初始化
+        checkDatabaseConnection();
+        loadApplicationsList();
+        
+        // 页面导航事件
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo(link.dataset.page);
+            });
+        });
+        
+        // 定期检查数据库连接
+        setInterval(checkDatabaseConnection, 30000);
+    </script>
+</body>
+</html>

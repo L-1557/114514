@@ -1,0 +1,45 @@
+# Python AI Service Dependencies
+# 涉水审批材料合规性审查系统 - Python 依赖包
+
+# 文档解析
+PyPDF2>=3.0.1
+pdfplumber>=0.10.0
+python-docx>=1.0.0
+
+# OCR 功能（可选）
+pytesseract>=0.3.10
+pdf2image>=1.16.0
+Pillow>=10.0.0
+
+# 向量化和嵌入
+sentence-transformers>=2.2.0
+numpy>=1.24.0
+
+# 向量数据库
+chromadb>=0.4.0
+
+# LangChain
+langchain>=0.1.0
+langchain-community>=0.0.10
+langchain-openai>=0.0.5
+openai>=1.0.0
+
+# MCP 协议
+mcp>=0.1.0
+
+# Web 框架
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.0.0
+
+# HTTP 客户端
+requests>=2.31.0
+httpx>=0.25.0
+
+# 工具库
+tqdm>=4.66.0
+python-dotenv>=1.0.0
+
+# 测试
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

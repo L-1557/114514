@@ -1,0 +1,18 @@
+{
+  "application_data": {
+    "project_name": "某市工业园区取水项目",
+    "applicant_name": "某市工业发展有限公司",
+    "water_source": "某河流",
+    "water_purpose": "工业用水",
+    "application_period": "2024-01-01至2029-12-31",
+    "water_volume": 50000,
+    "water_source_location": "某市某区某河流段",
+    "project_volume": 45000,
+    "project_approval_period": "2024-01-01至2028-12-31"
+  },
+  "documents": [
+    "application_form",
+    "business_license"
+  ],
+  "check_type": "full"
+}
